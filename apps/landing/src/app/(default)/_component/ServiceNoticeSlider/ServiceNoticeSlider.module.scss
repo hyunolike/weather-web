@@ -1,0 +1,9 @@
+.main {
+  @apply absolute top-0 left-0 w-full h-1/6 bg-slate-950 text-white;
+  @apply flex items-center justify-center;
+  @apply text-center;
+}
+
+.slider {
+  @apply p-2;
+}

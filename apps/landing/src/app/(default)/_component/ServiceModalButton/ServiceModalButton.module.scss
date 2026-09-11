@@ -1,0 +1,7 @@
+.main {
+  @apply bg-gradient-to-tr from-slate-600 to-amber-600 text-white shadow-lg;
+}
+
+.disabled {
+  @apply bg-gradient-to-tr from-slate-600 to-blue-600 text-white shadow-lg focus:cursor-not-allowed;
+}

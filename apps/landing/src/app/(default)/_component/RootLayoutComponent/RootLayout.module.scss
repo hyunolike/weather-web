@@ -1,0 +1,5 @@
+.root {
+  @apply max-w-[767px] min-[576px]:min-w-[576px] h-screen max-[575px]:w-[100vw] max-[575px]:h-[100vh];
+  //@apply bg-gradient-to-r from-slate-800 to-black
+  @apply bg-slate-950;
+}

@@ -1,0 +1,19 @@
+{
+  "name": "weather-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter @weather-web/service dev",
+    "dev:landing": "pnpm --filter @weather-web/landing dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.0.11",
+    "prettier": "^3.3.1"
+  }
+}

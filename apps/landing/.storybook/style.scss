@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'LaundryGothic-Regular';
+  src: url('../public/fonts/LaundryGothic-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html {
+  @apply font-laundry-regular text-white;
+}

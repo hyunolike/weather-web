@@ -1,0 +1,58 @@
+.modalBackgroud {
+  /* 루트화면 내 CSR 컴포넌트 처리를 위한 우선순위 처리 */
+  @apply w-screen h-full flex justify-center items-center absolute bg-black bg-opacity-40 top-0 left-0 right-0 bottom-0 z-10;
+}
+
+.modal {
+  @apply w-full max-[575px]:max-w-[80%] h-full max-[575px]:max-h-[50%] max-w-[400px] max-h-[500px] bg-white rounded-lg p-5 relative z-20;
+  @apply overflow-auto;
+}
+
+.modalContent {
+  @apply flex flex-col items-center gap-2;
+}
+
+.modalTitle {
+  @apply font-laundry-bold text-lg;
+}
+
+.modalInfo {
+  @apply font-laundry-regular text-sm text-gray-500 text-center;
+}
+
+.modalServiceSection {
+  @apply relative w-full bg-black h-10 overflow-hidden;
+  @apply flex justify-center items-center;
+  @apply rounded-lg;
+}
+
+.modalServiceInfo {
+  @apply absolute;
+  @apply whitespace-nowrap;
+  @apply font-laundry-regular text-white px-2 py-1;
+  @apply animate-marquee;
+}
+
+.modalEmailSection {
+  @apply flex mt-5;
+}
+
+.modalEmailForm {
+  @apply font-laundry-regular w-full flex flex-wrap md:flex-nowrap md:mb-0 gap-4 pr-2;
+}
+
+.modalEmailBtnSection {
+  @apply flex items-end;
+}
+
+.modalEmailButton {
+  @apply font-laundry-bold text-white bg-black rounded-lg px-4 py-2;
+}
+
+.modalFullM {
+  @apply mt-10;
+}
+
+.modalFullMInfo {
+  @apply font-laundry-regular text-white;
+}
