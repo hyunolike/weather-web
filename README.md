@@ -181,6 +181,7 @@ pnpm dev:landing   # 랜딩페이지 (:3000)
 
 pnpm lint          # 전체 워크스페이스 lint
 pnpm typecheck     # 전체 워크스페이스 타입 검사
+pnpm check:font    # 브랜드 폰트가 그리지 못하는 한글이 문구에 있는지 검사
 pnpm build         # 전체 워크스페이스 빌드
 ```
 
