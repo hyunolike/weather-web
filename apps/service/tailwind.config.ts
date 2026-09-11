@@ -10,7 +10,13 @@ const config: Config = {
     '../../node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      // 랜딩페이지와 동일한 폰트
+      fontFamily: {
+        'laundry-regular': ['LaundryGothic-Regular', 'sans-serif'],
+        'laundry-bold': ['LaundryGothic-Bold', 'sans-serif'],
+      },
+    },
   },
   darkMode: 'class',
   plugins: [nextui()],
