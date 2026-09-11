@@ -2,11 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 랜딩페이지와 동일한 폰트를 사용한다 (apps/landing/src/app/globals.css) */
+@font-face {
+  font-family: 'LaundryGothic-Bold';
+  src: url('../../public/fonts/LaundryGothic-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LaundryGothic-Regular';
+  src: url('../../public/fonts/LaundryGothic-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 html,
 body {
   height: 100%;
 }
 
 body {
-  @apply bg-slate-50 text-slate-900;
+  /* 랜딩과 동일하게 밝은 배경 위에 어두운 콘텐츠 영역을 올린다 */
+  @apply bg-gray-100 font-laundry-regular;
 }

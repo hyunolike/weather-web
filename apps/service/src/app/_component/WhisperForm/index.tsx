@@ -15,7 +15,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="rounded-lg bg-slate-800 px-4 py-2 text-sm text-white disabled:opacity-50"
+      className="font-laundry-bold rounded-lg bg-gradient-to-tr from-slate-600 to-amber-600 px-4 py-2 text-sm text-white shadow-lg disabled:opacity-50"
     >
       {pending ? '남기는 중...' : '속삭이기'}
     </button>
@@ -40,7 +40,7 @@ export default function WhisperForm() {
     <form
       ref={formRef}
       action={formAction}
-      className="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-4"
+      className="flex flex-col gap-2 rounded-lg border border-slate-800 bg-slate-900 p-4"
     >
       <label className="sr-only" htmlFor="locationCode">
         지역
@@ -49,7 +49,7 @@ export default function WhisperForm() {
         id="locationCode"
         name="locationCode"
         defaultValue={DEFAULT_LOCATION_CODE}
-        className="w-28 rounded-lg border border-gray-200 px-2 py-1 text-sm"
+        className="w-28 rounded-lg border border-slate-700 bg-slate-800 px-2 py-1 text-sm text-white"
       >
         {LOCATIONS.map((location) => (
           <option key={location.code} value={location.code}>
@@ -67,7 +67,8 @@ export default function WhisperForm() {
         rows={3}
         maxLength={MAX_CONTENT_LENGTH}
         placeholder="오늘 날씨에 어떤 기분이신가요?"
-        className="resize-none rounded-lg border border-gray-200 p-2 text-sm"
+        // 입력한 글자가 목록에서와 같게 보이도록 본문과 같은 시스템 폰트를 쓴다
+        className="resize-none rounded-lg border border-slate-700 bg-slate-800 p-2 font-sans text-sm text-white placeholder:text-gray-500"
       />
 
       <div className="flex items-center gap-2">
@@ -75,7 +76,7 @@ export default function WhisperForm() {
           <p
             role="status"
             className={`text-xs ${
-              state.status === 'error' ? 'text-red-500' : 'text-green-600'
+              state.status === 'error' ? 'text-red-400' : 'text-amber-400'
             }`}
           >
             {state.message}

@@ -25,5 +25,7 @@ jobs:
         run: pnpm lint
       - name: Typecheck
         run: pnpm typecheck
+      - name: Font coverage
+        run: pnpm check:font
       - name: Build
         run: pnpm build

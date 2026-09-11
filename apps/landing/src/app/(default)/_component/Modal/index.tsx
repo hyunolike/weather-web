@@ -90,6 +90,10 @@ export default function Modal() {
                 labelPlacement="outside"
                 name="email" //이 값을 이용해 데이터 처리 (server action)
                 value={email}
+                //사용자가 직접 입력하는 값이라 브랜드 폰트를 쓰지 않는다.
+                //LaundryGothic 은 KS X 1001 완성형 밖의 한글을 빈 글리프로
+                //가지고 있어, 그런 글자를 입력하면 화면에서 사라진다.
+                classNames={{ input: 'font-sans' }}
                 startContent={
                   <MdMail className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
                 }

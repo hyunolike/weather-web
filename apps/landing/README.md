@@ -27,6 +27,12 @@ pnpm --filter @weather-web/landing mock        # standalone mock 서버 (:9090)
 - 라우트 그룹 `(default)` + 병렬 라우트 `@modal` + 인터셉팅 라우트 `(.)flow` 로
   모달을 구성합니다. 인터셉팅은 클라이언트 네비게이션에서만 동작하므로,
   `/flow/*` 로 직접 진입하면 인터셉팅 없이 해당 페이지가 렌더링됩니다.
+- 브랜드 폰트 `LaundryGothic` 은 KS X 1001 완성형 2,350자만 담고 있고,
+  나머지 한글은 폭만 있고 그림이 없는 빈 글리프입니다. 폰트가 "그 글자를
+  가졌다" 고 응답해 대체 폰트로 넘어가지 않으므로, 범위 밖 글자를 문구에
+  쓰면 화면에서 사라집니다. 사용자가 입력하는 값에는 `font-sans` 를 지정해
+  시스템 폰트로 렌더링하고, 소스에 적는 문구는 `pnpm check:font` 로
+  검사합니다.
 - `MSWComponent` 의 `typeof window !== 'undefined'` 중첩은 그대로 두어야 합니다.
   `msw/browser` 는 node 조건에서 export 되지 않아, 이 분기가 서버 번들에서
   죽은 코드로 제거되어야만 빌드가 통과합니다.
