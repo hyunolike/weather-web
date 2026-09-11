@@ -26,3 +26,9 @@ export type WhisperView = {
   isMine: boolean
   reactions: ReactionSummary[]
 }
+
+export type WhisperPage = {
+  whispers: WhisperView[]
+  /** 다음 페이지가 없으면 null */
+  nextCursor: string | null
+}

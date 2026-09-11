@@ -2,23 +2,40 @@ import 'server-only'
 import { ReactionType } from '@prisma/client'
 import prisma from '@/commons/prisma'
 import { getAnonymousId } from '@/commons/anonymousUser'
-import { ReactionSummary, WhisperView } from '@/types/whisper'
+import { ReactionSummary, WhisperPage, WhisperView } from '@/types/whisper'
+import { PAGE_SIZE } from '@/constants/whisper'
 
-const PAGE_SIZE = 30
-
-/** 최근 속삭임 목록을 반응 집계와 함께 가져온다 */
-const getWhispers = async (): Promise<WhisperView[]> => {
+/**
+ * 최근 속삭임 목록을 반응 집계와 함께 가져온다.
+ * before 가 주어지면 그 글보다 오래된 글부터 가져온다 (커서 페이지네이션).
+ */
+const getWhispers = async (before?: string): Promise<WhisperPage> => {
   const viewerId = getAnonymousId()
 
-  const whispers = await prisma.whisper.findMany({
+  // 커서로 받은 id 가 유효하지 않으면 첫 페이지를 보여준다
+  const cursorWhisper = before
+    ? await prisma.whisper.findUnique({
+        where: { id: before },
+        select: { createdAt: true },
+      })
+    : null
+
+  const rows = await prisma.whisper.findMany({
+    where: cursorWhisper
+      ? { createdAt: { lt: cursorWhisper.createdAt } }
+      : undefined,
     orderBy: { createdAt: 'desc' },
-    take: PAGE_SIZE,
+    // 다음 페이지가 있는지 확인하려고 한 건 더 가져온다
+    take: PAGE_SIZE + 1,
     include: {
       reactions: { select: { type: true, userId: true } },
     },
   })
 
-  return whispers.map((whisper) => {
+  const hasNext = rows.length > PAGE_SIZE
+  const pageRows = hasNext ? rows.slice(0, PAGE_SIZE) : rows
+
+  const whispers: WhisperView[] = pageRows.map((whisper) => {
     const reactions: ReactionSummary[] = Object.values(ReactionType).map(
       (type) => {
         const matched = whisper.reactions.filter(
@@ -45,6 +62,11 @@ const getWhispers = async (): Promise<WhisperView[]> => {
       reactions,
     }
   })
+
+  return {
+    whispers,
+    nextCursor: hasNext ? whispers[whispers.length - 1].id : null,
+  }
 }
 
 export default getWhispers
