@@ -11,7 +11,6 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "prepare": "husky",
     "mock": "npx tsx watch ./src/mocks/http.ts",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
