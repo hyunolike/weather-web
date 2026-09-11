@@ -24,11 +24,44 @@ model Whisper {
   weatherCode  Int // WMO weather interpretation code
   temperature  Float
 
-  createdAt DateTime   @default(now())
+  createdAt DateTime @default(now())
+
+  /// 신고 누적으로 임시 숨김된 시각
+  hiddenAt DateTime?
+  /// 임시조치 종료 시각. 이 시각이 지나면 다시 보인다.
+  /// 정보통신망법 제44조의2 제4항은 임시조치 기간을 30일 이내로 정하고 있다.
+  hiddenUntil DateTime?
+
   reactions Reaction[]
+  reports   Report[]
 
   @@index([createdAt])
   @@index([authorId, createdAt])
+  @@index([hiddenUntil])
+}
+
+/// 속삭임 신고
+///
+/// 서로 다른 사용자의 신고가 임계치를 넘으면 글이 임시 숨김 처리된다.
+model Report {
+  id         String       @id @default(cuid())
+  whisperId  String
+  whisper    Whisper      @relation(fields: [whisperId], references: [id], onDelete: Cascade)
+  reporterId String       @db.VarChar(64) // 익명 사용자 ID (쿠키)
+  reason     ReportReason
+  createdAt  DateTime     @default(now())
+
+  // 한 사람이 같은 글을 여러 번 신고해 임계치를 올릴 수 없도록 한다
+  @@unique([whisperId, reporterId])
+  @@index([whisperId])
+}
+
+enum ReportReason {
+  abuse // 욕설·비방
+  obscene // 음란·선정성
+  spam // 광고·도배
+  privacy // 개인정보 노출
+  etc // 기타
 }
 
 /// 속삭임에 남기는 반응

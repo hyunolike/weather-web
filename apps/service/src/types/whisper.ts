@@ -25,6 +25,10 @@ export type WhisperView = {
   createdAt: Date
   isMine: boolean
   reactions: ReactionSummary[]
+  /** 내가 이미 신고한 글인지 */
+  reportedByMe: boolean
+  /** 신고 누적으로 임시 숨김된 글인지 (작성자 본인에게만 보인다) */
+  hiddenUntil: Date | null
 }
 
 export type WhisperPage = {

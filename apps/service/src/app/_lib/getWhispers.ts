@@ -1,5 +1,5 @@
 import 'server-only'
-import { ReactionType } from '@prisma/client'
+import { Prisma, ReactionType } from '@prisma/client'
 import prisma from '@/commons/prisma'
 import { getAnonymousId } from '@/commons/anonymousUser'
 import { ReactionSummary, WhisperPage, WhisperView } from '@/types/whisper'
@@ -20,15 +20,30 @@ const getWhispers = async (before?: string): Promise<WhisperPage> => {
       })
     : null
 
+  const now = new Date()
+
+  // 신고로 임시 숨김된 글은 목록에서 빼되, 작성자 본인에게는 보여준다
+  const visibleToViewer: Prisma.WhisperWhereInput = {
+    OR: [
+      { hiddenUntil: null },
+      { hiddenUntil: { lte: now } },
+      ...(viewerId ? [{ authorId: viewerId }] : []),
+    ],
+  }
+
   const rows = await prisma.whisper.findMany({
-    where: cursorWhisper
-      ? { createdAt: { lt: cursorWhisper.createdAt } }
-      : undefined,
+    where: {
+      AND: [
+        visibleToViewer,
+        cursorWhisper ? { createdAt: { lt: cursorWhisper.createdAt } } : {},
+      ],
+    },
     orderBy: { createdAt: 'desc' },
     // 다음 페이지가 있는지 확인하려고 한 건 더 가져온다
     take: PAGE_SIZE + 1,
     include: {
       reactions: { select: { type: true, userId: true } },
+      reports: { select: { reporterId: true } },
     },
   })
 
@@ -60,6 +75,13 @@ const getWhispers = async (before?: string): Promise<WhisperPage> => {
       createdAt: whisper.createdAt,
       isMine: viewerId !== null && whisper.authorId === viewerId,
       reactions,
+      reportedByMe:
+        viewerId !== null &&
+        whisper.reports.some((report) => report.reporterId === viewerId),
+      hiddenUntil:
+        whisper.hiddenUntil && whisper.hiddenUntil > now
+          ? whisper.hiddenUntil
+          : null,
     }
   })
 
