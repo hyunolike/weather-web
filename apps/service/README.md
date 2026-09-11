@@ -4,7 +4,7 @@
 
 ## 스택
 
-Next.js 14 (App Router) · TypeScript · Tailwind CSS · NextUI · Prisma (PostgreSQL)
+Next.js 14 (App Router) · TypeScript · Tailwind CSS · Prisma (PostgreSQL)
 
 백엔드는 별도 서버 없이 Next.js 풀스택(server actions + prisma)으로 구성합니다.
 
@@ -12,14 +12,50 @@ Next.js 14 (App Router) · TypeScript · Tailwind CSS · NextUI · Prisma (Postg
 
 ```bash
 cp .env.example .env   # POSTGRES_* 값을 채워주세요
-pnpm prisma-migrate    # 마이그레이션 생성 및 적용
+pnpm prisma-deploy     # 마이그레이션 적용
 pnpm dev               # http://localhost:3001
 ```
 
-## 진행 상황
+외부 네트워크가 막혀 있거나 오프라인에서 개발할 때는 `.env` 에
+`WEATHER_API_MOCKING=enabled` 를 넣으면 날씨 API 대신 좌표에서 결정되는
+고정 값을 사용합니다.
 
-아직 스켈레톤 단계입니다. 다음 항목이 정해져야 본격적인 개발을 시작할 수 있습니다.
+## 기획 결정 사항
 
-- [ ] 날씨 API 선정
-- [ ] 익명 인증 방식 결정
-- [ ] 글/공감 데이터 모델 확정 (`prisma/schema.prisma` 의 임시 모델 교체)
+아래 세 가지는 개발을 시작하기 위해 정한 것으로, 각각 독립적으로 바꿀 수 있습니다.
+
+### 1. 날씨 API — Open-Meteo
+
+- API 키 발급 없이 바로 호출할 수 있어 초기 개발과 배포가 막히지 않습니다.
+- 기상청 단기예보 API 는 키 발급과 위경도 → 격자 좌표 변환이 필요합니다.
+- 바꾸려면 `src/apis/weather.ts` 의 `fetchCurrentWeather` 만 교체하면 됩니다.
+  응답은 `{ code, temperature }` 형태로 고정되어 있습니다.
+
+### 2. 익명 인증 — 쿠키 기반 익명 ID (가입 없음)
+
+- "익명성을 기반으로 심리적 안정감을 제공한다" 는 서비스 컨셉에 맞춥니다.
+- 서버에서 발급한 UUID 를 httpOnly 쿠키(`wsp_uid`)에 담습니다.
+- 나중에 정회원 개념이 필요해지면, 계정에 이 익명 ID 를 연결하는 방식으로
+  기존 글을 잃지 않고 확장할 수 있습니다.
+- 관련 코드는 `src/commons/anonymousUser.ts` 입니다.
+
+### 3. 날씨는 작성 시점 스냅샷으로 저장
+
+- "그날 그 날씨에 이런 기분이었다" 가 이 서비스의 콘텐츠입니다.
+  조회 시점에 날씨를 다시 부르면 글의 의미가 달라집니다.
+- 외부 API 장애가 과거 글 조회에 영향을 주지 않는 이점도 있습니다.
+- 대신 날씨를 가져오지 못하면 글 작성을 막습니다.
+
+## 기능
+
+- 지역을 고르고 익명으로 속삭임 작성 (최대 500자)
+- 최근 속삭임 30개 목록 (작성 시점 날씨와 함께)
+- 공감 / 응원 / 토닥 반응 토글
+- 같은 사람의 연속 작성 10초 제한
+
+## 남은 것
+
+- [ ] 정밀 위치(geolocation) 기반 날씨 조회
+- [ ] 목록 페이지네이션 / 무한 스크롤
+- [ ] 신고 및 숨김 처리
+- [ ] 날씨별 · 지역별 필터
