@@ -1,13 +1,20 @@
-name: Vercel Development Deployment (landing)
+name: Vercel Preview Deployment (landing)
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 on:
   push:
-    branches:
+    branches-ignore:
+      - release
       - develop
+    paths:
+      - 'apps/landing/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.github/workflows/landing-*.yml'
 jobs:
-  Deploy-Development:
+  Deploy-Preview:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,7 +26,7 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
       - name: Pull Vercel Environment Information
-        run: vercel pull --cwd apps/landing --yes --environment=development --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --cwd apps/landing --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
       - name: Build Project Artifacts
         run: vercel build --cwd apps/landing --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel

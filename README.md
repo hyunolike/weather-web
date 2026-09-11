@@ -37,6 +37,29 @@ pnpm build         # 전체 워크스페이스 빌드
 
 각 앱의 환경변수는 `apps/*/.env.example` 를 참고해 `.env` 를 만들어 주세요.
 
+## 배포
+
+앱마다 Vercel 프로젝트를 따로 두고, 변경된 앱만 배포되도록 워크플로를 나눴습니다.
+
+| 브랜치    | 환경        |
+| --------- | ----------- |
+| `release` | production  |
+| `develop` | development |
+| 그 외     | preview     |
+
+필요한 GitHub Actions 시크릿
+
+| 시크릿                      | 설명                                    |
+| --------------------------- | --------------------------------------- |
+| `VERCEL_TOKEN`              | 공통                                    |
+| `VERCEL_ORG_ID`             | 공통                                    |
+| `VERCEL_PROJECT_ID`         | 랜딩 Vercel 프로젝트                    |
+| `VERCEL_PROJECT_ID_SERVICE` | 서비스 Vercel 프로젝트 (신규 생성 필요) |
+
+각 Vercel 프로젝트의 **Root Directory** 를 `apps/landing`, `apps/service` 로
+설정하고, 서비스 프로젝트에는 `apps/service/.env.example` 의 환경변수를
+등록해 주세요.
+
 ## 개발자 🧑🏻‍💻
 
 |                           FrontEnd                            |                            BackEnd                            |
