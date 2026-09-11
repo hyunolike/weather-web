@@ -1,0 +1,11 @@
+.main {
+  @apply font-laundry-regular;
+  @apply w-full h-3/6;
+  @apply relative;
+  @apply px-4 pt-10;
+  @apply flex flex-col items-center justify-center;
+}
+
+.serviceInfo {
+  @apply py-20 h-full;
+}

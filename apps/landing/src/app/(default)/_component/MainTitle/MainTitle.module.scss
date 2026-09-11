@@ -1,0 +1,19 @@
+.main {
+  @apply font-laundry-regular;
+  @apply w-full h-2/6 bg-blue-500;
+  @apply px-4 py-10;
+  //@apply bg-slate-950
+  @apply bg-gradient-to-r from-slate-800 to-slate-950;
+}
+
+.title {
+  @apply text-2xl text-white;
+}
+
+.subtitle {
+  @apply text-lg text-white;
+}
+
+.description {
+  @apply text-base text-amber-400;
+}
