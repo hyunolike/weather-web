@@ -7,7 +7,10 @@ const config: Config = {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    // pnpm workspace 에서는 @nextui-org/theme 가 워크스페이스 루트로 호이스팅된다.
+    // 두 경로를 모두 넣어야 앱 단독 설치와 모노레포 모두에서 스타일이 생성된다.
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+    '../../node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
