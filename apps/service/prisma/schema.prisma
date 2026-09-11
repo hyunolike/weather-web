@@ -1,0 +1,19 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+// ⚠️ 임시 모델입니다.
+// 서비스 기획(날씨 API 선정, 익명 인증 방식, 글/공감 구조)이 확정되면
+// 이 모델을 실제 데이터 모델로 교체해 주세요.
+// 지금은 prisma 툴체인(generate → build)이 동작하는지 확인하기 위한 최소 모델입니다.
+model Whisper {
+  id        Int      @id @default(autoincrement())
+  content   String   @db.VarChar(500)
+  createdAt DateTime @default(now())
+}
