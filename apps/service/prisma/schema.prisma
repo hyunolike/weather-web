@@ -8,12 +8,45 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-// ⚠️ 임시 모델입니다.
-// 서비스 기획(날씨 API 선정, 익명 인증 방식, 글/공감 구조)이 확정되면
-// 이 모델을 실제 데이터 모델로 교체해 주세요.
-// 지금은 prisma 툴체인(generate → build)이 동작하는지 확인하기 위한 최소 모델입니다.
+/// 속삭임 (익명으로 남기는 글)
+///
+/// 작성 시점의 날씨를 스냅샷으로 함께 저장한다.
+/// "그날 그 날씨에 이런 기분이었다" 가 이 서비스의 콘텐츠이므로
+/// 조회 시점에 날씨를 다시 부르면 글의 의미가 달라진다.
 model Whisper {
-  id        Int      @id @default(autoincrement())
-  content   String   @db.VarChar(500)
-  createdAt DateTime @default(now())
+  id       String @id @default(cuid())
+  authorId String @db.VarChar(64) // 익명 사용자 ID (쿠키)
+  content  String @db.VarChar(500)
+
+  // 작성 시점 날씨 스냅샷
+  locationCode String @db.VarChar(32)
+  locationName String @db.VarChar(50)
+  weatherCode  Int // WMO weather interpretation code
+  temperature  Float
+
+  createdAt DateTime   @default(now())
+  reactions Reaction[]
+
+  @@index([createdAt])
+  @@index([authorId, createdAt])
+}
+
+/// 속삭임에 남기는 반응
+model Reaction {
+  id        String       @id @default(cuid())
+  whisperId String
+  whisper   Whisper      @relation(fields: [whisperId], references: [id], onDelete: Cascade)
+  userId    String       @db.VarChar(64) // 익명 사용자 ID (쿠키)
+  type      ReactionType
+  createdAt DateTime     @default(now())
+
+  // 한 사람이 같은 글에 같은 반응을 중복으로 남길 수 없다
+  @@unique([whisperId, userId, type])
+  @@index([whisperId])
+}
+
+enum ReactionType {
+  empathy // 공감
+  cheer // 응원
+  hug // 토닥
 }
